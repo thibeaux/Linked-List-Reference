@@ -1,0 +1,137 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Node
+{
+    public:
+        int data;
+        Node* next;
+};
+/*================PUSH==========================*/
+/* Given a reference (pointer to pointer) = (Node* *head)
+to the head of a list and an int, inserts 
+a new node on the front of the list.The push() must receive a pointer 
+to the head pointer, because push must change the head pointer to point 
+to the new node */
+
+/*This inserts data in a stack like fashion, First in Last out.*/
+void push(Node** head, int newData)
+{
+    Node* newNode = new Node(); //allocate the memory space
+    newNode->data = newData;//input the data
+    newNode->next = *head;//Make next of new node as head 
+    *head = newNode;//move the head to point to the new node
+    //cout<< newNode->data << " ";//DEBUG LINE
+}
+/*=======================INSERT AFTER========================*/
+
+void insertAfter(Node* prev, int data)
+{
+    if(prev == NULL)
+    {
+        cout<<"List cannot be null"<<endl;
+        return;
+    }
+    Node* newNode = new Node();//initialize new Node
+    newNode->data = data; //assign new node with data
+    newNode->next = prev->next;//Make next of new node as next of prev_node  
+    prev->next = newNode;//move next of the previous node and assign it with the new node
+}
+
+/*=====================APPEND====================================*/
+// Given a reference (pointer to pointer) to the head   
+// of a list and an int, appends a new node at the end.
+//This allows you to add a new node to the tail end of the linked list.
+//This will function as a Queued storage or a first in/ first out.
+void append(Node** head, int data)
+{
+    Node* newNode = new Node();//initialize new node to allocate memory address
+    Node* lastNode = *head;//used in step 5
+    newNode->data = data; // assign newNode with data
+    newNode->next = NULL;//because newNode is going to be at the end of the list
+    
+    //check if list is empty
+    if(*head == NULL)
+    {
+        *head = newNode;//initiate new list
+        return;
+    }
+    
+    //traverse to end of the list
+    while(lastNode->next != NULL)
+    {
+        lastNode = lastNode->next;
+    }
+    
+    lastNode->next = newNode;//Change the next of last node  
+}
+
+/*This will traverse through the linked list and return a pointer to the position that we specified.
+This can be used so that we call insertAfter and use the return variable as the afress that we want to 
+insert after. Example:
+I want to insert int 5 after the 3 position of the linked list
+while i is less than the position 3 i increments. Thus moving the current Node along the list.
+then we return the address of the node that we arrive at. we then send this address to insertAfter()
+so that we can assign a new Node and data after this node at the 3rd position.*/
+Node* traverse(Node** headRef, int position)
+{
+    Node* cur = *headRef;
+    int i=0;
+    while(i+1 < position)
+    {
+        cur = cur->next;
+        i++;
+    }
+    return cur;
+}
+
+void printList(Node* n) 
+{ 
+    while (n != NULL) { 
+        cout << n->data << " "; 
+        n = n->next; 
+    } 
+} 
+
+int main()
+{
+    int insertInt = 10  ;
+    int position = 5;
+    vector<int> list = {1,2,3,4,5,6};
+    vector<int> list2 = {20,21,22,23,24,25};
+    Node* head = new Node(); 
+    head = NULL; 
+    
+    //Dislpays how the push function is used to add nodes in a stacked order
+    //or add nodes to the beginning of the list pushing old nodes to the back.
+    for (int i = 0; i<list.size(); i++)
+    {
+        push(&head,list[i]);
+    }
+    cout<<"Push generates a list: ";
+    printList(head);
+    cout<<endl;
+    
+    //Displays how nodes are added to the middle of the existing list. 
+    //I use a function called traverse which takes an input for the head address,
+    //interger being inserted, and the posistion in the list which it will be inserted into.
+    //traverse returns a pointer to the position which we want to insert atfter.
+    //This can show how you would go about adding nodes to
+    //different spots of the linked list.
+    insertAfter(traverse(&head, position), insertInt);
+    cout<<"insertAfter using traverse as the node-to-insert's address adds this to the list: ";
+    printList(head);
+    cout<<endl;
+    
+    
+    for (int i = 0; i<list2.size(); i++)
+    {
+        append(&head,list2[i]);
+    }
+    cout<<"append adds a second list of numbers to our linked list generating: ";
+    printList(head);
+    cout<<endl;
+    return 0;
+}
