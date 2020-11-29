@@ -67,6 +67,35 @@ void append(Node** head, int data)
     
     lastNode->next = newNode;//Change the next of last node  
 }
+/*=====================REMOVE NODE=========================================*/
+Node* deleteNode(Node* head, int position) 
+{
+    Node* temp = head;
+    Node* prev = nullptr;
+    int i=0;
+    
+    if(position == 0)
+    {
+        head = temp->next; // Changed head 
+        delete temp;            // free old head 
+        return head; 
+    }
+    if (temp == nullptr)
+    {
+        return head;
+    }
+    while(i + 1<= position) // will delete node that comes after the nth position
+    {
+        prev = temp;
+        temp = temp->next;
+        i++;
+    }
+    prev->next = temp->next;
+    delete temp;
+    
+    return head;
+}
+
 
 /*This will traverse through the linked list and return a pointer to the position that we specified.
 This can be used so that we call insertAfter and use the return variable as the afress that we want to 
@@ -132,6 +161,10 @@ int main()
     }
     cout<<"append adds a second list of numbers to our linked list generating: ";
     printList(head);
+    cout<<endl;
+    
+    cout << "After deleting the node in the " << position +1 << " position, we have this: " ;
+    printList(deleteNode(head,position));
     cout<<endl;
     return 0;
 }
